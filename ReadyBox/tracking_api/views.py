@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Package
 from .forms import RegistrationForm
@@ -20,18 +20,18 @@ def register(request):
         form = RegistrationForm()
     return render(request, 'register.html', {'form': form})
 
-def login(request):
+def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
+            auth_login(request, user)
             return redirect('user_dashboard' if not user.is_staff else 'admin_dashboard')
     return render(request, 'login.html')
 
-def logout(request):
-    logout(request)
+def logout_view(request):
+    auth_logout(request)
     return redirect('login')
 
 @login_required
@@ -44,4 +44,5 @@ def user_dashboard(request):
 def admin_dashboard(request):
     packages = Package.objects.all()
     return render(request, 'admin_dashboard.html', {'packages': packages})
+
 
