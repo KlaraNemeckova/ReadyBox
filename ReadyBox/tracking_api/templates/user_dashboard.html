@@ -1,0 +1,6 @@
+<h2>Your Packages</h2>
+<ul>
+    {% for package in packages %}
+    <li>{{ package.tracking_number }} - {{ package.status }}</li>
+    {% endfor %}
+</ul>

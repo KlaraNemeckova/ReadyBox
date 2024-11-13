@@ -4,6 +4,12 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Package
 from .forms import RegistrationForm
 
+def home(request):
+    return render(request, "home.html") 
+
+def about(request):
+    return render(request, "about.html") 
+
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
