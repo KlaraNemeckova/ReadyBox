@@ -30,6 +30,8 @@ def login_view(request):
             return redirect('user_dashboard' if not user.is_staff else 'admin_dashboard')
     return render(request, 'login.html')
 
+# dopsat zprávu při zadání špatného jména/hesla
+
 def logout_view(request):
     auth_logout(request)
     return redirect('login')
@@ -40,7 +42,7 @@ def user_dashboard(request):
     return render(request, 'user_dashboard.html', {'packages': packages})
 
 @login_required
-@user_passes_test(lambda u: u.is_staff)
+@user_passes_test(lambda u: u.is_staff, login_url='login')  # Pokud uživatel není admin, bude přesměrován na přihlašovací stránku.
 def admin_dashboard(request):
     packages = Package.objects.all()
     return render(request, 'admin_dashboard.html', {'packages': packages})
