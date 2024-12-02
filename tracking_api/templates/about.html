@@ -15,6 +15,9 @@
         .content {
             flex: 1; 
         }
+        .card {
+            border: none; 
+        }
         footer {
             background-color: #f8f9fa;
             padding: 10px 0;
@@ -47,14 +50,14 @@
         <h1 class="text-center mb-4">About ReadyBox</h1>
         <div class="card">
             <div class="card-body">
-                <h2>What is ReadyBox?</h2>
+                <h3>What is ReadyBox?</h3>
                 <p>ReadyBox is a 24/7 self-service locker system where customers can pick up their orders using a unique tracking number.</p>
-                <h2>How does the service work?</h2>
+                <h3>How does the service work?</h3>
                 <p>
                     As a customer, you place an order and receive a unique tracking number. Once your package is ready, it will be stored in a ReadyBox locker.
                     You’ll receive a notification with the tracking number and pickup code, allowing you to collect your package at your convenience, 24/7.
                 </p>
-                <h2>Our Mission:</h2>
+                <h3>Our Mission:</h3>
                 <p>
                     We aim to provide a simple, efficient, and reliable solution for package management. Whether you're a user waiting for a delivery or an
                     administrator managing logistics, our platform is here to make your experience as smooth as possible.
@@ -64,7 +67,7 @@
     </div>
 
     <footer class="text-center py-3">
-        <p>&copy; 2024 ReadyBox. All rights reserved. | <a href="#">Privacy Policy</a></p>
+        <p>&copy; 2024 ReadyBox. All rights reserved. | <a href="{% url 'privacy_policy' %}">Privacy Policy</a></p>
     </footer>
 </body>
 </html>
