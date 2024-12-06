@@ -1,0 +1,21 @@
+{% extends 'master.html' %}
+
+{% block content %}
+  <h2>History for Package: {{ package.tracking_number }}</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Changed At</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in history %}
+        <tr>
+          <td>{{ entry.status }}</td>
+          <td>{{ entry.changed_at }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

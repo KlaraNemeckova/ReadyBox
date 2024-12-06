@@ -10,6 +10,8 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('user_dashboard/', views.user_dashboard, name='user_dashboard'),
     path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('add_package/', views.add_package, name='add_package'),
+    path('package_history/<str:tracking_number>/', views.package_history, name='package_history'),
     
 ]
 

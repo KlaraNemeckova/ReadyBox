@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Package
-from .forms import RegistrationForm
+from .forms import RegistrationForm, PackageForm
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
+from django.views.generic import ListView
+
 
 
 def home(request):
@@ -59,5 +60,44 @@ def user_dashboard(request):
 def admin_dashboard(request):
     packages = Package.objects.all()
     return render(request, 'admin_dashboard.html', {'packages': packages})
+
+@login_required
+def user_dashboard(request):
+    # Získání všech zásilek přihlášeného uživatele
+    packages = Package.objects.filter(user=request.user)
+    return render(request, 'user_dashboard.html', {'packages': packages})
+
+@login_required
+def add_package(request):
+    if request.method == 'POST':
+        form = PackageForm(request.POST)
+        if form.is_valid():
+            # Přidání uživatele, který zásilku vytvořil
+            package = form.save(commit=False)
+            package.user = request.user
+            package.save()
+            return redirect('admin_dashboard')  # Přesměrování na seznam zásilek
+    else:
+        form = PackageForm()
+
+    return render(request, 'add_package.html', {'form': form})
+
+
+class PackageListView(ListView):
+    model = Package
+    template_name = 'packages_list.html'
+    context_object_name = 'packages'
+
+    def get_queryset(self):
+        # Filtrace zásilek pro aktuálního uživatele
+        return Package.objects.filter(user=self.request.user)
+
+
+def package_history(request, tracking_number):
+    package = get_object_or_404(Package, tracking_number=tracking_number)
+    history = package.history.all()  
+
+    return render(request, 'package_history.html', {'package': package, 'history': history})
+
 
 

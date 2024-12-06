@@ -1,66 +1,34 @@
 {% extends 'master.html' %}
 
-{% block title %}
-  User Dashboard
-{% endblock %}
-
 {% block content %}
-    <div class="content container">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <h1 class="text-center">Welcome to Your Dashboard</h1>
-        <h2>Your Packages</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Tracking Number</th>
-                    <th>Status</th>
-                    <th>Pickup Code</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for package in packages %}
-                    <tr>
-                        <td>{{ package.tracking_number }}</td>
-                        <td>{{ package.get_status_display }}</td>
-                        <td>{{ package.pickup_code }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<form method="POST">
+  {% csrf_token %}
+</form>
+  <h2>User Dashboard</h2>
 
-        <div class="row">
-            <!-- Card 1 -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">Your Packages</div>
-                    <div class="card-body">
-                        <p>You have 3 packages ready for pickup.</p>
-                        <a href="#" class="btn btn-primary">View Details</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header bg-success text-white">Account Details</div>
-                    <div class="card-body">
-                        <p>Manage your personal information and settings.</p>
-                        <a href="#" class="btn btn-success">Edit Profile</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header bg-warning text-dark">Support</div>
-                    <div class="card-body">
-                        <p>Need help? Contact our support team.</p>
-                        <a href="#" class="btn btn-warning">Get Help</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  <h3>Your Packages</h3>
+  <table class="table mt-4">
+    <thead>
+      <tr>
+        <th>Tracking Number</th>
+        <th>Status</th>
+        <th>Pickup Code</th>
+        <th>Created At</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for package in packages %}
+        <tr>
+          <td>{{ package.tracking_number }}</td>
+          <td>{{ package.get_status_display }}</td>
+          <td>{{ package.pickup_code }}</td>
+          <td>{{ package.created_at }}</td>
+          <td>
+            <a href="{% url 'package_history' package.tracking_number %}">History</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

@@ -1,19 +1,14 @@
 {% extends 'master.html' %}
 
 {% block content %}
-  <h2>Admin Dashboard</h2>
-
-  <a href="{% url 'add_package' %}" class="btn btn-primary">Add New Package</a>
-
-  <h3>All Packages</h3>
-  <table class="table mt-4">
+  <h2>My Packages</h2>
+  <table class="table">
     <thead>
       <tr>
         <th>Tracking Number</th>
         <th>Status</th>
         <th>Pickup Code</th>
         <th>Created At</th>
-        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -23,11 +18,9 @@
           <td>{{ package.get_status_display }}</td>
           <td>{{ package.pickup_code }}</td>
           <td>{{ package.created_at }}</td>
-          <td>
-            <a href="{% url 'package_history' package.tracking_number %}">History</a>
-          </td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
 {% endblock %}
+
