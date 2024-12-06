@@ -31,22 +31,18 @@ def register(request):
 
 
 def login_view(request):
-    form = AuthenticationForm()  # Vytvoření prázdného formuláře
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
 
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)  # Získání dat z formuláře
-        if form.is_valid():  # Pokud jsou data platná
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                auth_login(request, user)  # Přihlášení uživatele
-                return redirect('user_dashboard' if not user.is_staff else 'admin_dashboard')
-            else:
-                messages.error(request, 'Invalid username or password.')
+        if user is not None:
+            auth_login(request, user)
+            return redirect('user_dashboard' if not user.is_staff else 'admin_dashboard')
+        else:
+            messages.error(request, "Invalid username or password.") 
 
-    return render(request, 'login.html', {'form': form})  # Vrácení formuláře do šablony
-
+    return render(request, 'login.html')
 
 
 def logout_view(request):
