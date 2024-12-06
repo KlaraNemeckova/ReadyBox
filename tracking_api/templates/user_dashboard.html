@@ -1,34 +1,28 @@
 {% extends 'master.html' %}
 
 {% block content %}
-<form method="POST">
-  {% csrf_token %}
-</form>
-  <h2>User Dashboard</h2>
+<div class="container my-5">
+    <h2>Welcome, {{ user.username }}</h2>
+    
+    <h3>Track your package</h3>
+    <form method="POST" action="{% url 'user_dashboard' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="tracking_number" class="form-label">Enter your tracking number</label>
+            <input type="text" class="form-control" id="tracking_number" name="tracking_number" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Track Package</button>
+    </form>
 
-  <h3>Your Packages</h3>
-  <table class="table mt-4">
-    <thead>
-      <tr>
-        <th>Tracking Number</th>
-        <th>Status</th>
-        <th>Pickup Code</th>
-        <th>Created At</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for package in packages %}
-        <tr>
-          <td>{{ package.tracking_number }}</td>
-          <td>{{ package.get_status_display }}</td>
-          <td>{{ package.pickup_code }}</td>
-          <td>{{ package.created_at }}</td>
-          <td>
-            <a href="{% url 'package_history' package.tracking_number %}">History</a>
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    {% if messages %}
+    <div class="mt-3">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
+

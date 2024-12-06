@@ -12,6 +12,7 @@ urlpatterns = [
     path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('add_package/', views.add_package, name='add_package'),
     path('package_history/<str:tracking_number>/', views.package_history, name='package_history'),
+    path('package_status/<str:tracking_number>/', views.package_status, name='package_status'),
     
 ]
 

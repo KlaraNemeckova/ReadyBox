@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.views.generic import ListView
 
 
-
 def home(request):
     return render(request, "home.html") 
 
@@ -51,21 +50,49 @@ def logout_view(request):
     return redirect('login')
 
 @login_required
-def user_dashboard(request):
-    packages = Package.objects.filter(user=request.user)
-    return render(request, 'user_dashboard.html', {'packages': packages})
-
-@login_required
 @user_passes_test(lambda u: u.is_staff, login_url='login')  # Pokud uživatel není admin, bude přesměrován na přihlašovací stránku.
 def admin_dashboard(request):
     packages = Package.objects.all()
     return render(request, 'admin_dashboard.html', {'packages': packages})
 
+
+
 @login_required
 def user_dashboard(request):
-    # Získání všech zásilek přihlášeného uživatele
-    packages = Package.objects.filter(user=request.user)
-    return render(request, 'user_dashboard.html', {'packages': packages})
+    if request.method == "POST":
+        tracking_number = request.POST.get("tracking_number", "").strip()
+
+        # Pokud uživatel nezadal tracking_number
+        if not tracking_number:
+            messages.error(request, "Please enter a tracking number.")
+            return redirect('user_dashboard')
+
+        try:
+            # Najděte balík podle tracking_number
+            package = Package.objects.get(tracking_number=tracking_number)
+            # Přesměrujte uživatele na stránku package_status
+            return redirect('package_status', tracking_number=package.tracking_number)
+        except Package.DoesNotExist:
+            # Pokud balík neexistuje, zobrazte zprávu na user_dashboard
+            messages.error(request, "Package not found. Please check the tracking number.")
+            return redirect('user_dashboard')
+
+    # GET request: zobrazí dashboard
+    return render(request, 'user_dashboard.html')
+
+
+@login_required
+def package_status(request, tracking_number):
+    try:
+        package = Package.objects.get(tracking_number=tracking_number, user=request.user)
+        print(f"Package found: {package.tracking_number}, {package.status}")
+    except Package.DoesNotExist:
+        messages.error(request, "Package not found.")
+        return redirect('user_dashboard')
+    
+    return render(request, 'package_status.html', {'package': package})
+
+
 
 @login_required
 def add_package(request):
