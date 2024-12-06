@@ -11,6 +11,7 @@
             flex-direction: column;
             min-height: 100vh;
             margin: 0;
+            background-color: #f8f9fa;
         }
         .content {
             flex: 1;
@@ -18,6 +19,33 @@
         footer {
             background-color: #f8f9fa;
             padding: 10px 0;
+        }
+        .card {
+            max-width: 400px;
+            margin: 50px auto;
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-control {
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border: 1px solid #ced4da;
+        }
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .text-danger {
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -57,14 +85,14 @@
             </div>
         {% endif %}
 
-    
-        <div class="card mx-auto" style="max-width: 500px;">
+        <div class="card">
             <div class="card-body">
                 <form method="post">
                     {% csrf_token %}
+                    {% load widget_tweaks %}
                     <div class="mb-3">
-                        {{ form.username.label_tag }}
-                        {{ form.username }}
+                        <label for="username" class="form-label">Username</label>
+                        {{ form.username|add_class:"form-control" }}
                         {% if form.username.errors %}
                             <div class="text-danger">
                                 {% for error in form.username.errors %}
@@ -74,8 +102,8 @@
                         {% endif %}
                     </div>
                     <div class="mb-3">
-                        {{ form.email.label_tag }}
-                        {{ form.email }}
+                        <label for="email" class="form-label">Email</label>
+                        {{ form.email|add_class:"form-control" }}
                         {% if form.email.errors %}
                             <div class="text-danger">
                                 {% for error in form.email.errors %}
@@ -84,9 +112,10 @@
                             </div>
                         {% endif %}
                     </div>
+
                     <div class="mb-3">
-                        {{ form.password1.label_tag }}
-                        {{ form.password1 }}
+                        <label for="password1" class="form-label">Password</label>
+                        {{ form.password1|add_class:"form-control" }}
                         {% if form.password1.errors %}
                             <div class="text-danger">
                                 {% for error in form.password1.errors %}
@@ -96,8 +125,8 @@
                         {% endif %}
                     </div>
                     <div class="mb-3">
-                        {{ form.password2.label_tag }}
-                        {{ form.password2 }}
+                        <label for="password2" class="form-label">Confirm Password</label>
+                        {{ form.password2|add_class:"form-control" }}
                         {% if form.password2.errors %}
                             <div class="text-danger">
                                 {% for error in form.password2.errors %}
@@ -117,12 +146,9 @@
             </div>
         </div>
     </div>
-    
-        
 
     <footer class="text-center py-3">
         <p>&copy; 2024 ReadyBox. All rights reserved. | <a href="{% url 'privacy_policy' %}">Privacy Policy</a></p>
     </footer>
 </body>
 </html>
-

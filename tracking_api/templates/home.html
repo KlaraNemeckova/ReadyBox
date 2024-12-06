@@ -5,22 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - ReadyBox</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        /* Ensure sticky footer using flexbox layout */
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh; /* Minimum height of viewport */
-            margin: 0; /* Remove default body margin */
-        }
-        .content {
-            flex: 1; /* Content grows to fill available space */
-        }
-        footer {
-            background-color: #f8f9fa;
-            padding: 10px 0;
-        }
-    </style>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login - ReadyBox</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            /* Ensure sticky footer using flexbox layout */
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh; /* Minimum height of viewport */
+                margin: 0; /* Remove default body margin */
+                background-color: #f8f9fa; /* Zajišťuje jemné pozadí pro celou stránku */
+            }
+    
+            .content {
+                flex: 1; /* Content grows to fill available space */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding-top: 50px; /* Zajišťuje trochu prostoru na vrchu */
+            }
+    
+            footer {
+                background-color: #f8f9fa;
+                padding: 10px 0;
+            }
+    
+            .card {
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+    
+            .card-header {
+                background-color: #007bff;
+                color: white;
+                font-size: 1.25rem;
+            }
+    
+            .form-control {
+                border-radius: 10px;
+                background-color: #f0f8ff; /* Světlešedomodrá barva pro políčka */
+                border: 1px solid #007bff;
+            }
+    
+            .form-control:focus {
+                background-color: #e0f7fa; /* Jasně modrá při zaměření */
+                border-color: #0056b3;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            }
+    
+            .btn-primary {
+                background-color: #007bff;
+                border-color: #007bff;
+                border-radius: 10px;
+            }
+    
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+            }
+    
+            .alert {
+                border-radius: 10px;
+            }
+        </style>
 </head>
 <body>
     <!-- Navigation -->
