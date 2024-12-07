@@ -53,23 +53,40 @@ def logout_view(request):
 @login_required
 @user_passes_test(lambda u: u.is_staff, login_url='login')  # Pokud uživatel není admin, bude přesměrován na přihlašovací stránku.
 def admin_dashboard(request):
+    # Získání dotazových parametrů pro filtrování a řazení
+    ordering = request.GET.get('ordering', '-created_at')  # defaultně řadit podle created_at sestupně
+    status_filter = request.GET.get('status', None)
+    user_filter = request.GET.get('user', None)
+
+    # Zajistíme, že 'user_filter' je platné číslo (ID uživatele)
+    if user_filter:
+        try:
+            # Hledáme uživatele podle jeho jména
+            user_filter = User.objects.get(username=user_filter)
+        except User.DoesNotExist:
+            user_filter = None  # Pokud uživatel neexistuje, nastavíme user_filter na None
+    
+    # Filtrování balíků podle parametrů
     packages = Package.objects.all()
     
-    # Filtrování
-    if 'status' in request.GET:
-        packages = packages.filter(status=request.GET['status'])
-    if 'user' in request.GET:
-        packages = packages.filter(user_id=request.GET['user'])
+    if status_filter:
+        packages = packages.filter(status=status_filter)
     
-    # Seřazování
-    ordering = request.GET.get('ordering')  # defaultně podle created_at
-    if ordering.startswith('-'):
-        packages = packages.order_by(ordering)
-    else:
-        packages = packages.order_by(f'-{ordering}')  # Pokud není přidáno "-", seřadí sestupně
+    if user_filter:
+        packages = packages.filter(user=user_filter)
+    
+    # Řazení balíků podle požadavku
+    packages = packages.order_by(ordering)
+    
+    # Renderování šablony s balíky
+    return render(request, 'admin_dashboard.html', {
+        'packages': packages,
+        'ordering': ordering,
+        'status_filter': status_filter,
+        'user_filter': user_filter.username if user_filter else None,  # Předáme jméno uživatele zpět
+    })
 
-    users = User.objects.all()  # Pro filtrovaní uživatelů
-    return render(request, 'admin_dashboard.html', {'packages': packages})
+
 
 
 @login_required

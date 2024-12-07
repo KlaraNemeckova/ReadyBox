@@ -42,6 +42,19 @@
             text-align: center;
             vertical-align: middle;
         }
+
+        /* Styling for the form groups to make fields stack properly */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group .form-control {
+            width: 100%;  /* Ensure input and select elements take full width */
+        }
+
+        button[type="submit"] {
+            margin-top: 10px; /* Space above the submit button */
+        }
     </style>
 </head>
 <body>
@@ -74,15 +87,35 @@
                 <a href="{% url 'add_package' %}" class="btn btn-primary">Add New Package</a>
             </div>
 
-            {% if messages %}
-                <div class="mb-3">
-                    {% for message in messages %}
-                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
+            <!-- Filtrování formuláře -->
+            <div class="mb-3">
+                <form method="get" class="form-inline">
+                    <!-- Form group for status -->
+                    <div class="form-group">
+                        <label for="status" class="form-label">Status:</label>
+                        <select name="status" id="status" class="form-control">
+                            <option value="">All</option>
+                            <option value="in_box" {% if status_filter == 'in_box' %}selected{% endif %}>In Box</option>
+                            <option value="ready_for_pickup" {% if status_filter == 'ready_for_pickup' %}selected{% endif %}>Ready for Pick Up</option>
+                            <option value="picked_up" {% if status_filter == 'picked_up' %}selected{% endif %}>Picked Up</option>
+                        </select>
+                    </div>
+
+                    <!-- Form group for user -->
+                    <div class="form-group">
+                        <label for="user" class="form-label">User:</label>
+                        <input type="text" name="user" id="user" class="form-control" value="{{ user_filter }}">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Filter</button>
+                </form>
+            </div>
+
+            <!-- Řazení odkazy -->
+            <div class="mb-3">
+                <a href="?ordering=-created_at" class="btn btn-link">Sort by Created At (Descending)</a>
+                <a href="?ordering=created_at" class="btn btn-link">Sort by Created At (Ascending)</a>
+            </div>
 
             <table class="table table-striped table-hover">
                 <thead class="table-dark">
@@ -95,16 +128,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for package in packages %}
-                        <tr>
-                            <td>{{ package.tracking_number }}</td>
-                            <td>{{ package.get_status_display }}</td>
-                            <td>{{ package.pickup_code }}</td>
-                            <td>{{ package.created_at }}</td>
-                            <td>{{ package.user.username }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
+                  {% for package in packages %}
+                      <tr>
+                          <td>{{ package.tracking_number }}</td>
+                          <td>
+                              {% if package.status == 'in_box' %}
+                                  In Box
+                              {% elif package.status == 'ready_for_pickup' %}
+                                  Ready for Pick Up
+                              {% elif package.status == 'picked_up' %}
+                                  Picked Up
+                              {% else %}
+                                  {{ package.status }}
+                              {% endif %}
+                          </td>
+                          <td>{{ package.pickup_code }}</td>
+                          <td>{{ package.created_at }}</td>
+                          <td>{{ package.user.username }}</td>
+                      </tr>
+                  {% endfor %}
+              </tbody>
             </table>
 
             {% if not packages %}
