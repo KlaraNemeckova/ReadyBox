@@ -16,12 +16,15 @@ class RegistrationForm(UserCreationForm):
             raise forms.ValidationError("This email is already in use.")
         return email
 
+
 class PackageForm(forms.ModelForm):
     class Meta:
         model = Package
-        fields = ['tracking_number', 'status', 'pickup_code']
+        fields = ['tracking_number', 'status', 'pickup_code', 'user']
         widgets = {
-            'status': forms.Select(choices=Package.STATUS_CHOICES),
+            'status': forms.Select(choices=Package.STATUS_CHOICES),  # Udržuje vlastní výběr pro status
         }
 
+    # Vytvoří pole pro výběr uživatele
+    user = forms.ModelChoiceField(queryset=User.objects.all(), required=True)
 

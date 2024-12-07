@@ -5,6 +5,7 @@ from .models import Package
 from .forms import RegistrationForm, PackageForm
 from django.contrib import messages
 from django.views.generic import ListView
+from django.contrib.auth.models import User
 
 
 def home(request):
@@ -53,8 +54,22 @@ def logout_view(request):
 @user_passes_test(lambda u: u.is_staff, login_url='login')  # Pokud uživatel není admin, bude přesměrován na přihlašovací stránku.
 def admin_dashboard(request):
     packages = Package.objects.all()
-    return render(request, 'admin_dashboard.html', {'packages': packages})
+    
+    # Filtrování
+    if 'status' in request.GET:
+        packages = packages.filter(status=request.GET['status'])
+    if 'user' in request.GET:
+        packages = packages.filter(user_id=request.GET['user'])
+    
+    # Seřazování
+    ordering = request.GET.get('ordering')  # defaultně podle created_at
+    if ordering.startswith('-'):
+        packages = packages.order_by(ordering)
+    else:
+        packages = packages.order_by(f'-{ordering}')  # Pokud není přidáno "-", seřadí sestupně
 
+    users = User.objects.all()  # Pro filtrovaní uživatelů
+    return render(request, 'admin_dashboard.html', {'packages': packages})
 
 
 @login_required
@@ -93,17 +108,15 @@ def package_status(request, tracking_number):
     return render(request, 'package_status.html', {'package': package})
 
 
-
 @login_required
 def add_package(request):
     if request.method == 'POST':
         form = PackageForm(request.POST)
         if form.is_valid():
-            # Přidání uživatele, který zásilku vytvořil
+            # Přidání vybraného uživatele z formuláře
             package = form.save(commit=False)
-            package.user = request.user
             package.save()
-            return redirect('admin_dashboard')  # Přesměrování na seznam zásilek
+            return redirect('admin_dashboard')  
     else:
         form = PackageForm()
 
@@ -120,11 +133,6 @@ class PackageListView(ListView):
         return Package.objects.filter(user=self.request.user)
 
 
-def package_history(request, tracking_number):
-    package = get_object_or_404(Package, tracking_number=tracking_number)
-    history = package.history.all()  
-
-    return render(request, 'package_history.html', {'package': package, 'history': history})
 
 
 

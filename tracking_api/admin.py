@@ -5,7 +5,7 @@ from .models import Package
 class PackageAdmin(admin.ModelAdmin):
     list_display = ('tracking_number', 'user', 'status', 'created_at')
     search_fields = ('tracking_number', 'user__username')
-    list_filter = ('status',)
-    # Pole 'user' bude povinné ve formuláři
+    list_filter = ('status','user')
     fields = ('tracking_number', 'user', 'status', 'pickup_code')
+    ordering = ('-created_at',)  # řazení sestupně
 
